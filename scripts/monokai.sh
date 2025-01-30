@@ -321,7 +321,7 @@ main()
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${black},nobold,nounderscore,noitalics]"
+    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black},nobold,nounderscore,noitalics]"
   fi
 
   # Window option
