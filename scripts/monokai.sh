@@ -149,7 +149,7 @@ main()
     if $show_powerline; then
       if [ $i -eq 0 ]; then
         left_sep=""
-        tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${black},nobold,nounderscore,noitalics]${left_sep}"
+        tmux set-option -ga status-left "#[fg=${!colors[0]},bg=${black},nobold,nounderscore,noitalics]${left_sep}"
         left_sep="$show_left_sep"
       elif $show_empty_plugins; then
         tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}"
