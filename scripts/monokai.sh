@@ -139,6 +139,7 @@ main()
       IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-session-colors" "green black")
       tmux set-option -g status-left-length 250
       script="#S"
+
     elif [ $plugin = "host" ]; then
       IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-host-colors" "magenta black")
       tmux set-option -g status-left-length 250
@@ -147,9 +148,9 @@ main()
 
     if $show_powerline; then
       if $show_empty_plugins; then
-        tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bold] $script "
+        tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
       else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${powerfg},bg=${!colors[0]},bold] $script }"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
       fi
       powerfg=${!colors[0]}
       left_sep="$show_left_sep"
