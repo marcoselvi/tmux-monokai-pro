@@ -13,25 +13,25 @@ main()
   eks_extract_account=$(get_tmux_option "@monokai-kubernetes-eks-extract-account" false)
   hide_kubernetes_user=$(get_tmux_option "@monokai-kubernetes-hide-user" false)
   terraform_label=$(get_tmux_option "@monokai-terraform-label" "")
-  show_fahrenheit=$(get_tmux_option "@monokai-show-fahrenheit" true)
-  show_location=$(get_tmux_option "@monokai-show-location" true)
+  show_fahrenheit=$(get_tmux_option "@monokai-show-fahrenheit" false)
+  show_location=$(get_tmux_option "@monokai-show-location" false)
   fixed_location=$(get_tmux_option "@monokai-fixed-location")
-  show_powerline=$(get_tmux_option "@monokai-show-powerline" true)
+  show_powerline=$(get_tmux_option "@monokai-show-powerline" false)
   show_flags=$(get_tmux_option "@monokai-show-flags" false)
   show_left_icon=$(get_tmux_option "@monokai-show-left-icon" session)
   show_left_icon_padding=$(get_tmux_option "@monokai-left-icon-padding" 0)
   show_military=$(get_tmux_option "@monokai-military-time" false)
-  timezone=$(get_tmux_option "@monokai-set-timezone" "")
-  show_timezone=$(get_tmux_option "@monokai-show-timezone" true)
+  timezone=$(get_tmux_option "@monokai-set-timezone" "GMT")
+  show_timezone=$(get_tmux_option "@monokai-show-timezone" false)
   show_left_sep=$(get_tmux_option "@monokai-show-left-sep" )
   show_right_sep=$(get_tmux_option "@monokai-show-right-sep" )
-  show_border_contrast=$(get_tmux_option "@monokai-border-contrast" false)
   show_day_month=$(get_tmux_option "@monokai-day-month" false)
   show_refresh=$(get_tmux_option "@monokai-refresh-rate" 5)
   show_synchronize_panes_label=$(get_tmux_option "@monokai-synchronize-panes-label" "Sync")
   time_format=$(get_tmux_option "@monokai-time-format" "")
   show_ssh_session_port=$(get_tmux_option "@monokai-show-ssh-session-port" false)
-  IFS=' ' read -r -a plugins <<< $(get_tmux_option "@monokai-plugins" "network-ping cpu-usage ram-usage")
+  IFS=' ' read -r -a right_plugins <<< $(get_tmux_option "@monokai-right-plugins" "network-ping cpu-usage ram-usage")
+  IFS=' ' read -r -a left_plugins <<< $(get_tmux_option "@monokai-left-plugins" "session")
   show_empty_plugins=$(get_tmux_option "@monokai-show-empty-plugins" true)
 
   # Monokai Pro Color Pallette
@@ -76,7 +76,7 @@ main()
   fi
 
   # start weather script in background
-  if [[ "${plugins[@]}" =~ "weather" ]]; then
+  if [[ "${right_plugins[@]}" =~ "weather" ]]; then
     $current_dir/sleep_weather.sh $show_fahrenheit $show_location $fixed_location &
   fi
 
@@ -99,7 +99,7 @@ main()
       current_flags="#{?window_flags,#[fg=${cyan}]#{window_flags},}"
   esac
 
-  # sets refresh interval to every 5 seconds
+  # sets refresh interval to every $show_refresh seconds
   tmux set-option -g status-interval $show_refresh
 
   # set the prefix + t time format
@@ -114,11 +114,7 @@ main()
   tmux set-option -g status-right-length 100
 
   # pane border styling
-  if $show_border_contrast; then
-    tmux set-option -g pane-active-border-style "fg=${green}"
-  else
-    tmux set-option -g pane-active-border-style "fg=${green}"
-  fi
+  tmux set-option -g pane-active-border-style "fg=${green}"
   tmux set-option -g pane-border-style "fg=${gray}"
 
   # message styling
@@ -129,16 +125,47 @@ main()
 
   # Status left
   if $show_powerline; then
-    tmux set-option -g status-left "#[fg=${green},bg=${black}]#{?client_prefix,#[fg=${magenta}],}#[bg=${green},fg=${black},bold]#{?client_prefix,#[bg=${magenta}],} ${left_icon} #[fg=${green},bg=${dark_gray}]#{?client_prefix,#[fg=${magenta}],}${left_sep}"
+    tmux set-option -g status-left "#[fg=${green},bg=${black}]#{?client_prefix,#[fg=${magenta}],}"
     powerbg=${dark_gray}
-  else
-    tmux set-option -g status-left "#[bg=${green},fg=${black},bold]#{?client_prefix,#[bg=${magenta}],} ${left_icon} "
+    powerfg=${dark_gray}
+
+  for plugin in "${left_plugins[@]}"; do
+
+    if [ $plugin = "session" ]; then
+      IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-session-colors" "green black")
+      tmux set-option -g status-left-length 250
+      script="#S"
+    elif [ $plugin = "host" ]; then
+      IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-host-colors" "magenta black")
+      tmux set-option -g status-left-length 250
+      script="#h"
+    fi
+
+    if $show_powerline; then
+      if $show_empty_plugins; then
+        tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bold] $script "
+      else
+        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${powerfg},bg=${!colors[0]},bold] $script }"
+      fi
+      powerfg=${!colors[1]}
+    else
+      if $show_empty_plugins; then
+        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
+      else
+        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
+      fi
+    fi
+
+  done
+
+  if $show_powerline; then
+    tmux set-option -ga status-left "#[fg=${powerfg},bg=${powerbg}]${left_sep}"
   fi
 
   # Status right
   tmux set-option -g status-right ""
 
-  for plugin in "${plugins[@]}"; do
+  for plugin in "${right_plugins[@]}"; do
 
     if case $plugin in custom:*) true;; *) false;; esac; then
       script=${plugin#"custom:"}
@@ -293,9 +320,7 @@ main()
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-right "#[fg=${green},bg=${yellow}]${right_sep}#[bg=${green},fg=${black},bold] #h #[bg=${black},fg=${green}]"
-  else
-    tmux set-option -ga status-right "#[fg=${green},bg=${blue}]${right_sep}#[bg=${green},fg=${black},bold] #h "
+    tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${black},nobold,nounderscore,noitalics]"
   fi
 
   # Window option
