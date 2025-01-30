@@ -147,7 +147,7 @@ main()
     fi
 
     if $show_powerline; then
-      if $i == 0; then
+      if [ $i -eq 0 ]; then
         left_sep=""
         tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${black},nobold,nounderscore,noitalics]${left_sep}"
         left_sep="$show_left_sep"
