@@ -146,14 +146,14 @@ main()
       if $show_empty_plugins; then
         tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bold] $script "
       else
-        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${powerfg},bg=${!colors[0]},bold] $script }"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${powerfg},bg=${!colors[0]},bold] $script }"
       fi
       powerfg=${!colors[1]}
     else
       if $show_empty_plugins; then
-        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
+        tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
       else
-        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
       fi
     fi
 
