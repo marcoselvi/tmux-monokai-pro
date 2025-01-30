@@ -131,9 +131,9 @@ main()
     powerbg=${dark_gray}
   fi
 
-  left_sep=""
-
-  for plugin in "${left_plugins[@]}"; do
+  len=${#left_plugins[@]}
+  for (( i=0; i<$len; i++ )); do
+    plugin=${left_plugins[i]}
 
     if [ $plugin = "session" ]; then
       IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-session-colors" "green black")
@@ -141,19 +141,27 @@ main()
       script="#S"
 
     elif [ $plugin = "host" ]; then
-      IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-host-colors" "magenta black")
+      IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-host-colors" "yellow black")
       tmux set-option -g status-left-length 250
       script="#h"
     fi
 
     if $show_powerline; then
-      if $show_empty_plugins; then
-        tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
+      if $i == 0; then
+        left_sep=""
+        tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${black},nobold,nounderscore,noitalics]${left_sep}"
+        left_sep="$show_left_sep"
+      elif $show_empty_plugins; then
+        tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}"
       else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}}"
+      fi
+      if $show_empty_plugins; then
+        tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
+      else
+        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
       fi
       powerfg=${!colors[0]}
-      left_sep="$show_left_sep"
     else
       if $show_empty_plugins; then
         tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
@@ -288,13 +296,13 @@ main()
         script=${time_format}
       else
         if $show_day_month && $show_military ; then # military time and dd/mm
-          script="%a %d/%m %R ${timezone} "
+          script="%a %d/%m %R ${timezone}"
         elif $show_military; then # only military time
-          script="%a %m/%d %R ${timezone} "
+          script="%a %m/%d %R ${timezone}"
         elif $show_day_month; then # only dd/mm
-          script="%a %d/%m %I:%M %p ${timezone} "
+          script="%a %d/%m %I:%M %p ${timezone}"
         else
-          script="%a %m/%d %I:%M %p ${timezone} "
+          script="%a %m/%d %I:%M %p ${timezone}"
         fi
       fi
 
