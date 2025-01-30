@@ -124,6 +124,8 @@ main()
   tmux set-option -g status-style "bg=${dark_gray},fg=${white}"
 
   # Status left
+  tmux set-option -g status-left ""
+
   if $show_powerline; then
     powerfg=${black}
     powerbg=${dark_gray}
