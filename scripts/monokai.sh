@@ -125,10 +125,11 @@ main()
 
   # Status left
   if $show_powerline; then
-    tmux set-option -g status-left "#[fg=${green},bg=${black}]#{?client_prefix,#[fg=${magenta}],}"
+    powerfg=${black}
     powerbg=${dark_gray}
-    powerfg=${dark_gray}
   fi
+
+  left_sep=""
 
   for plugin in "${left_plugins[@]}"; do
 
@@ -148,7 +149,7 @@ main()
       else
         tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${powerfg},bg=${!colors[0]},bold] $script }"
       fi
-      powerfg=${!colors[1]}
+      powerfg=${!colors[0]}
     else
       if $show_empty_plugins; then
         tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
