@@ -144,36 +144,32 @@ main()
       IFS=' ' read -r -a colors  <<< $(get_tmux_option "@monokai-host-colors" "yellow black")
       tmux set-option -g status-left-length 250
       script="#h"
+
+    else
+      continue
     fi
 
-    if $show_powerline; then
-      if [ $i -eq 0 ]; then
-        left_sep=""
-        tmux set-option -ga status-left "#{?client_prefix,#[fg=${magenta},bg=${black},nobold,nounderscore,noitalics],#[fg=${!colors[0]},bg=${black},nobold,nounderscore,noitalics]}${left_sep}"
-        left_sep="$show_left_sep"
-      elif $show_empty_plugins; then
-        tmux set-option -ga status-left "#{?client_prefix,#[fg=${magenta},bg=${magenta},nobold,nounderscore,noitalics],#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]}${left_sep}"
-      else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#{?client_prefix,#[fg=${magenta},bg=${magenta},nobold,nounderscore,noitalics],#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]}${left_sep}}"
-      fi
-      if $show_empty_plugins; then
-        tmux set-option -ga status-left "#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script "
-      else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script }"
-      fi
-      powerfg=${!colors[0]}
+    fgcolor="#{?client_prefix,$magenta,$powerfg}"
+    bgcolor="#{?client_prefix,$magenta,${!colors[0]}}"
+    if [ $i -eq 0 ] && $show_powerline; then
+      left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]"
+    elif $show_powerline; then
+      left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
     else
-      if $show_empty_plugins; then
-        tmux set-option -ga status-left "#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script "
-      else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script }"
-      fi
+      left_symbol=""
     fi
+    if $show_empty_plugins; then
+      tmux set-option -ga status-left "$left_symbol#[fg=${!colors[1]},bg=$bgcolor,bold] $script "
+    else
+      tmux set-option -ga status-left "#{?#{==:$script,},,$left_symbol#[fg=${!colors[1]},bg=$bgcolor,bold] $script }"
+    fi
+    powerfg=${!colors[0]}
 
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-left "#{?client_prefix,#[fg=${magenta},bg=${powerbg}],#[fg=${powerfg},bg=${powerbg}]}${left_sep}"
+    fgcolor="#{?client_prefix,$magenta,$powerfg}"
+    tmux set-option -ga status-left "#[fg=$fgcolor,bg=${powerbg}]${left_sep}"
     left_sep="$show_left_sep"
   fi
 
@@ -319,19 +315,17 @@ main()
     fi
 
     if $show_powerline; then
-      if $show_empty_plugins; then
-        tmux set-option -ga status-right "#[fg=${!colors[0]},bg=${powerbg},nobold,nounderscore,noitalics]${right_sep}#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
-      else
-        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${right_sep}#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
-      fi
-      powerbg=${!colors[0]}
+      separator="#[fg=${!colors[0]},bg=${powerbg},nobold,nounderscore,noitalics]${right_sep}"
     else
-      if $show_empty_plugins; then
-        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
-      else
-        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
-      fi
+      separator=""
     fi
+    if $show_empty_plugins; then
+      tmux set-option -ga status-right "$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
+    else
+      tmux set-option -ga status-right "#{?#{==:$script,},,$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
+    fi
+    powerbg=${!colors[0]}
+
   done
 
   if $show_powerline; then
