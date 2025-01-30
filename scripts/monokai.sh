@@ -327,9 +327,9 @@ main()
       powerbg=${!colors[0]}
     else
       if $show_empty_plugins; then
-        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]}] $script "
+        tmux set-option -ga status-right "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
       else
-        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]}] $script }"
+        tmux set-option -ga status-right "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
       fi
     fi
   done
