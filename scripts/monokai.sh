@@ -128,6 +128,7 @@ main()
     tmux set-option -g status-left "#[fg=${green},bg=${black}]#{?client_prefix,#[fg=${magenta}],}"
     powerbg=${dark_gray}
     powerfg=${dark_gray}
+  fi
 
   for plugin in "${left_plugins[@]}"; do
 
