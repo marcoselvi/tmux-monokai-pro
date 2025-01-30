@@ -149,31 +149,31 @@ main()
     if $show_powerline; then
       if [ $i -eq 0 ]; then
         left_sep=""
-        tmux set-option -ga status-left "#[fg=${!colors[0]},bg=${black},nobold,nounderscore,noitalics]#{?client_prefix,#[fg=${magenta}],}${left_sep}"
+        tmux set-option -ga status-left "#{?client_prefix,#[fg=${magenta},bg=${black},nobold,nounderscore,noitalics],#[fg=${!colors[0]},bg=${black},nobold,nounderscore,noitalics]}${left_sep}"
         left_sep="$show_left_sep"
       elif $show_empty_plugins; then
-        tmux set-option -ga status-left "#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]#{?client_prefix,#[fg=${magenta},bg=${magenta}],}${left_sep}"
+        tmux set-option -ga status-left "#{?client_prefix,#[fg=${magenta},bg=${magenta},nobold,nounderscore,noitalics],#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]}${left_sep}"
       else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]#{?client_prefix,#[fg=${magenta},bg=${magenta}],}${left_sep}}"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#{?client_prefix,#[fg=${magenta},bg=${magenta},nobold,nounderscore,noitalics],#[fg=${powerfg},bg=${!colors[0]},nobold,nounderscore,noitalics]}${left_sep}}"
       fi
       if $show_empty_plugins; then
-        tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold]#{?client_prefix,#[bg=${magenta}],} $script "
+        tmux set-option -ga status-left "#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script "
       else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold]#{?client_prefix,#[bg=${magenta}],} $script }"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script }"
       fi
       powerfg=${!colors[0]}
     else
       if $show_empty_plugins; then
-        tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold]#{?client_prefix,#[bg=${magenta}],} $script "
+        tmux set-option -ga status-left "#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script "
       else
-        tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[1]},bg=${!colors[0]},bold]#{?client_prefix,#[bg=${magenta}],} $script }"
+        tmux set-option -ga status-left "#{?#{==:$script,},,#{?client_prefix,#[fg=${!colors[1]},bg=${magenta},bold],#[fg=${!colors[1]},bg=${!colors[0]},bold]} $script }"
       fi
     fi
 
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-left "#[fg=${powerfg},bg=${powerbg}]#{?client_prefix,#[fg=${magenta}],}${left_sep}"
+    tmux set-option -ga status-left "#{?client_prefix,#[fg=${magenta},bg=${powerbg}],#[fg=${powerfg},bg=${powerbg}]}${left_sep}"
     left_sep="$show_left_sep"
   fi
 
