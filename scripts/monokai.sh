@@ -150,6 +150,7 @@ main()
         tmux set-option -ga status-left "#{?#{==:$script,},,#[fg=${!colors[0]},nobold,nounderscore,noitalics]${left_sep}#[fg=${powerfg},bg=${!colors[0]},bold] $script }"
       fi
       powerfg=${!colors[0]}
+      left_sep="$show_left_sep"
     else
       if $show_empty_plugins; then
         tmux set-option -ga status-left "#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
@@ -162,6 +163,7 @@ main()
 
   if $show_powerline; then
     tmux set-option -ga status-left "#[fg=${powerfg},bg=${powerbg}]${left_sep}"
+    left_sep="$show_left_sep"
   fi
 
   # Status right
