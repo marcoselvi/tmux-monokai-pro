@@ -74,9 +74,9 @@ main()
   # Handle powerline option
   if $show_powerline; then
     left_sep="$show_left_sep"
-    left_end="$show_left_end"
+    left_end="  $show_left_end"
     right_sep="$show_right_sep"
-    right_end="$show_right_end"
+    right_end="$show_right_end  "
   fi
 
   # start weather script in background
@@ -333,7 +333,7 @@ main()
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black}]${right_end}"
+    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black}]${right_end} "
   fi
 
   # Window option
