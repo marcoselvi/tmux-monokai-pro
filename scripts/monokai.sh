@@ -328,7 +328,7 @@ main()
     else
       tmux set-option -ga status-right "#{?#{==:$script,},,$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
     fi
-    powerbg=${!colors[0]}
+    # powerbg=${!colors[0]}
 
   done
 
