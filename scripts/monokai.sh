@@ -322,7 +322,7 @@ main()
     if $show_empty_plugins; then
       tmux set-option -ga status-right "$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script "
     else
-      tmux set-option -ga status-right "#{?#{==:$script,},,$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
+      tmux set-option -ga status-right "#{?#{==:$script,},,$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script} "
     fi
     powerbg=${!colors[0]}
 
