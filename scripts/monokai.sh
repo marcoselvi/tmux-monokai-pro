@@ -24,7 +24,9 @@ main()
   timezone=$(get_tmux_option "@monokai-set-timezone" "GMT")
   show_timezone=$(get_tmux_option "@monokai-show-timezone" false)
   show_left_sep=$(get_tmux_option "@monokai-show-left-sep" )
+  show_left_end=$(get_tmux_option "@monokai-show-left-end" )
   show_right_sep=$(get_tmux_option "@monokai-show-right-sep" )
+  show_right_end=$(get_tmux_option "@monokai-show-right-end" )
   show_day_month=$(get_tmux_option "@monokai-day-month" false)
   show_refresh=$(get_tmux_option "@monokai-refresh-rate" 5)
   show_synchronize_panes_label=$(get_tmux_option "@monokai-synchronize-panes-label" "Sync")
@@ -71,8 +73,10 @@ main()
 
   # Handle powerline option
   if $show_powerline; then
-    right_sep="$show_right_sep"
     left_sep="$show_left_sep"
+    left_end="$show_left_end"
+    right_sep="$show_right_sep"
+    right_end="$show_right_end"
   fi
 
   # start weather script in background
@@ -152,7 +156,7 @@ main()
     fgcolor="#{?client_prefix,$magenta,$powerfg}"
     bgcolor="#{?client_prefix,$magenta,${!colors[0]}}"
     if [ $i -eq 0 ] && $show_powerline; then
-      left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]"
+      left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]${left_end}"
     elif $show_powerline; then
       left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
     else
@@ -329,7 +333,7 @@ main()
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black},nobold,nounderscore,noitalics]"
+    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black},nobold,nounderscore,noitalics]${left_end}"
   fi
 
   # Window option
