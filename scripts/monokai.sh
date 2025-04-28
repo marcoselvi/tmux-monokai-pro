@@ -328,12 +328,12 @@ main()
     else
       tmux set-option -ga status-right "#{?#{==:$script,},,$separator#[fg=${!colors[1]},bg=${!colors[0]},bold] $script }"
     fi
-    # powerbg=${!colors[0]}
+    powerbg=${!colors[0]}
 
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black},nobold,nounderscore,noitalics]${right_end}"
+    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black}]${right_end}"
   fi
 
   # Window option
