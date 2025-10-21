@@ -130,10 +130,10 @@ main()
   # Status left
   tmux set-option -g status-left ""
 
-  # if $show_powerline; then
-  #   powerfg=${black}
-  #   powerbg=${dark_gray}
-  # fi
+  if $show_powerline; then
+    powerfg=${black}
+    powerbg=${dark_gray}
+  fi
 
   len=${#left_plugins[@]}
   for (( i=0; i<$len; i++ )); do
@@ -156,11 +156,9 @@ main()
     fgcolor="#{?client_prefix,$magenta,$powerfg}"
     bgcolor="#{?client_prefix,$magenta,${!colors[0]}}"
     if [ $i -eq 0 ] && $show_powerline; then
-      # left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]${left_end}"
-      left_symbol=""
+      left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]${left_end}"
     elif $show_powerline; then
-      # left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
-      left_symbol=""
+      left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
     else
       left_symbol=""
     fi
