@@ -159,7 +159,8 @@ main()
       # left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]${left_end}"
       left_symbol=""
     elif $show_powerline; then
-      left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
+      # left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
+      left_symbol=""
     else
       left_symbol=""
     fi
