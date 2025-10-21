@@ -156,7 +156,8 @@ main()
     fgcolor="#{?client_prefix,$magenta,$powerfg}"
     bgcolor="#{?client_prefix,$magenta,${!colors[0]}}"
     if [ $i -eq 0 ] && $show_powerline; then
-      left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]${left_end}"
+      # left_symbol="#[fg=$bgcolor,bg=${black},nobold,nounderscore,noitalics]${left_end}"
+      left_symbol=""
     elif $show_powerline; then
       left_symbol="#[fg=$fgcolor,bg=$bgcolor,nobold,nounderscore,noitalics]${left_sep}"
     else
@@ -333,7 +334,7 @@ main()
   done
 
   if $show_powerline; then
-    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black}]${right_end} "
+    tmux set-option -ga status-right "#[fg=${powerbg},bg=${black}]${right_end}"
   fi
 
   # Window option
