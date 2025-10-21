@@ -130,10 +130,10 @@ main()
   # Status left
   tmux set-option -g status-left ""
 
-  if $show_powerline; then
-    powerfg=${black}
-    powerbg=${dark_gray}
-  fi
+  # if $show_powerline; then
+  #   powerfg=${black}
+  #   powerbg=${dark_gray}
+  # fi
 
   len=${#left_plugins[@]}
   for (( i=0; i<$len; i++ )); do
